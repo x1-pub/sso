@@ -1,6 +1,6 @@
 {
   "name": "@x1.pub/sso",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "sso.x1.pub Node.js/TypeScript Server SDK",
   "type": "module",
   "main": "./dist/index.cjs",
