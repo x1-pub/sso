@@ -24,11 +24,7 @@ class Server {
           callbackUrl: params.callbackUrl,
         })
       })
-      const result = await response.json() as any
-      return {
-        ...result,
-        code: result.code !== 0 ? NEED_RE_LOGIN_CODE : 0
-      }
+      return response.json() as any
     } catch (err) {
       return {
         code: UNKNOWN_ERROR_CODE,

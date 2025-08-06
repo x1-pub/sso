@@ -18,8 +18,32 @@ interface AuthSessionIdAPIData {
   loginUrl: string
 }
 
+interface AuthSessionIdSuccess {
+  code: 0,
+  message: string;
+  data: {
+    id: number;
+    name: string;
+    nameCn: string;
+    email: string;
+  }
+}
+
+interface AuthSessionIdFail {
+  code: 10010,
+  message: string;
+  data: {
+    loginUrl: string
+  }
+}
+
+interface AuthSessionIdUnknown {
+  code: number,
+  message: string;
+}
+
 export interface AuthSessionIdAPI {
-  (params: AuthSessionIdAPIParams): Response<AuthSessionIdAPIData>
+  (params: AuthSessionIdAPIParams): Promise<AuthSessionIdSuccess | AuthSessionIdFail | AuthSessionIdUnknown>
 }
 
 interface AuthTicketAPIParams {
