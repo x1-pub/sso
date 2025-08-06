@@ -38,7 +38,7 @@ class Server {
 
   AuthTicket: AuthTicketAPI = async (params) => {
     try {
-      const response = await fetch(`${HOST}/api/business/auth/session`, {
+      const response = await fetch(`${HOST}/api/business/auth/ticket`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
