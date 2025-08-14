@@ -25,7 +25,7 @@
     "@midwayjs/sequelize": "^3.19.0",
     "@midwayjs/validate": "^3.19.0",
     "@multiavatar/multiavatar": "^1.0.7",
-    "@x1.pub/doraemon": "^0.0.3",
+    "@x1.pub/doraemon": "^0.0.5",
     "crypto-js": "^4.2.0",
     "mysql2": "^3.11.5",
     "nodemailer": "^6.9.16",
