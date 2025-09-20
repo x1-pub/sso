@@ -113,6 +113,7 @@ export class AuthService {
       throw new Error('非法的ticket');
     }
     this.redisService.del(redisKey);
+    return userId
   }
 
   /**

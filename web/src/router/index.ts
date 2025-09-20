@@ -8,8 +8,6 @@ const routes = [
   { path: "/", redirect: () => ({ path: "/login" }) },
   { path: "/login", component: LoginForm },
   { path: "/register", component: RegisterForm },
-  { path: "/console", component: RegisterForm },
-  { path: "/console", component: RegisterForm },
   { path: "/error", component: ErrorTips },
   {
     path: "/:pathMatch(.*)*",

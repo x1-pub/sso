@@ -1,12 +1,12 @@
-import { Inject, Controller, Post, Body, Config } from '@midwayjs/core';
+import { Inject, Controller, Post, Body, Config, Get, Headers, Query } from '@midwayjs/core';
 import { ValidateService } from '@midwayjs/validate';
 import { Context } from '@midwayjs/koa';
 
 import { Business } from '../entity/business.entity';
 import { AuthService } from '../service/auth.service';
 import { BusinessRegisterDTO } from '../dto/business';
-import { AuthSessionDTO, AuthTicketDTO, LogoutDTO, SearchUserDTO, UserListDTO } from '../dto/auth';
-import res, { RspCode } from '../utils/res';
+import { LogoutDTO, SearchUserDTO, UserListDTO } from '../dto/auth';
+import res from '../utils/res';
 import { User } from '../entity/user.entity';
 import { Op } from 'sequelize';
 
@@ -30,45 +30,35 @@ export class BusinessService {
     return res({ data: result });
   }
 
-  @Post('/auth/session')
-  async auth(@Body() body: AuthSessionDTO) {
-    const { sessionId, appId, appSecret, callbackUrl } = body;
+  @Get('/auth/session')
+  async auth(@Headers('app-id') appId: string, @Headers('authorization') authorization: string, @Headers('app-secret') appSecret: string) {
     try {
-      if (!sessionId) {
+      if (!authorization) {
         throw new Error('session id 为空');
       }
       const userInfo = await this.authService.authBusinessSessionId(
-        sessionId,
+        authorization,
         appId,
         appSecret
       );
-      return res({ data: userInfo });
+      this.ctx.set({ 'sso_user_id' : String(userInfo.id) })
+      this.ctx.status = 200
     } catch (err) {
-      return res({
-        code: RspCode.AUTH_INVALID,
-        message: err.message || '验证不通过',
-        data: {
-          loginUrl: `${
-            this.domain
-          }?appId=${appId}&callbackUrl=${encodeURIComponent(callbackUrl)}`,
-        },
-      });
+      this.ctx.status = 401;
     }
   }
 
-  @Post('/auth/ticket')
-  async authTicket(@Body() body: AuthTicketDTO) {
-    const { ticket, appId, appSecret } = body;
-    await this.authService.authTicket(ticket, appId, appSecret);
+  @Get('/auth/ticket')
+  async authTicket(@Query('ticket') ticket: string, @Query('callbackUrl') callbackUrl: string, @Headers('app-id') appId: string, @Headers('app-secret') appSecret: string) {
+    const userId = await this.authService.authTicket(ticket, appId, appSecret);
     const sessionId = await this.authService.createAndSaveBusinessSession(
       ticket,
       appId,
       appSecret
     );
-
-    return res({
-      data: { sessionId },
-    });
+    this.ctx.set({ 'sso_session_id': sessionId })
+    this.ctx.set({ 'sso_user_id' : userId })
+    this.ctx.redirect(callbackUrl)
   }
 
   @Post('/logout')

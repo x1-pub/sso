@@ -34,6 +34,7 @@ const request = (url: string, method: Method, params: IParams = {}) => {
       "Content-Type": "application/json;charset=utf-8",
       credentials: "include",
     },
+    redirect: 'follow',
   };
 
   if (method === Method.POST) {
