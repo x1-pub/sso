@@ -50,14 +50,13 @@ export class BusinessService {
 
   @Get('/auth/ticket')
   async authTicket(@Query('ticket') ticket: string, @Query('callbackUrl') callbackUrl: string, @Headers('app-id') appId: string, @Headers('app-secret') appSecret: string) {
-    const userId = await this.authService.authTicket(ticket, appId, appSecret);
+    await this.authService.authTicket(ticket, appId, appSecret);
     const sessionId = await this.authService.createAndSaveBusinessSession(
       ticket,
       appId,
       appSecret
     );
     this.ctx.set({ 'sso_session_id': sessionId })
-    this.ctx.set({ 'sso_user_id' : userId })
     this.ctx.redirect(callbackUrl)
   }
 
